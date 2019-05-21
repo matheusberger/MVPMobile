@@ -1,54 +1,66 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, ScrollView} from 'react-native';
-import Stock from "./modules/stock.js";
+import {StyleSheet, ScrollView, View, Button, Text} from 'react-native'
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import QRCodeScreen from './screens/QRCodeScreen.js';
+import StockScreen from './screens/StockScreen.js';
 
-export default class App extends Component {
+class HomeScreen extends Component {
   render() {
+    const {navigate} = this.props.navigation;
     return (
-      <Stock></Stock>
-      /*<ScrollView style={styles.container}>
-        <View style={styles.postContainer}>
-          <Text style={styles.postTitle}>Lorem Ipsum</Text>
-          <Text style={styles.postDescription}>dolor sit amet</Text>
+      <ScrollView style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.title}>Co.Junto</Text>
         </View>
-
-        <View style={styles.postContainer}>
-          <Text style={styles.postTitle}>Lorem Ipsum</Text>
-          <Text style={styles.postDescription}>dolor sit amet</Text>
-        </View>
-
-        <View style={styles.postContainer}>
-          <Text style={styles.postTitle}>Lorem Ipsum</Text>
-          <Text style={styles.postDescription}>dolor sit amet</Text>
-        </View>
-
-        <View style={styles.postContainer}>
-          <Text style={styles.postTitle}>Lorem Ipsum</Text>
-          <Text style={styles.postDescription}>dolor sit amet</Text>
-        </View>
-      </ScrollView>*/
+        <Button
+          title="QR"
+          onPress={() => navigate('QRCode', {name: 'Jane'})}
+        />
+        <Button
+          title="Stock"
+          onPress={() => navigate('Stock', {name: 'Jane'})}
+        />
+      </ScrollView>
     );
   }
-}
+};
+
+const AppNavigator = createStackNavigator({
+  Home: HomeScreen,
+  Stock: StockScreen,
+  QRCode: QRCodeScreen
+},
+{
+  initialRouteName: 'Home'
+});
+
+const AppContainer = createAppContainer(AppNavigator);
+
+export default class App extends Component{
+  render() {
+    return (
+      <AppContainer>
+        <HomeScreen/>
+      </AppContainer>
+    )
+  }
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#531382',
   },
-  postContainer: {
-    padding: 20,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    backgroundColor: '#FFF',
-    borderRadius: 3
+  headerContainer: {
+    flex: 1,
+    marginTop: 15,
+    marginBottom: 15,
+    backgroundColor: '#531382',
   },
-  postTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5
-  },
-  postDescription: {
-    color: "#666"
+  title: {
+    flex: 1,
+    fontSize: 20,
+    color: "#FFFFFF",
+    textAlign: 'center',
   }
 });
