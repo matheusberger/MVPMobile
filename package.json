@@ -7,9 +7,11 @@
     "test": "jest"
   },
   "dependencies": {
+    "fs": "0.0.1-security",
     "react": "16.8.6",
     "react-native": "0.59.8",
     "react-native-camera": "^2.9.0",
+    "react-native-fs": "^2.13.3",
     "react-native-gesture-handler": "^1.2.1",
     "react-native-navigation": "^2.19.1",
     "react-native-qrcode-scanner": "^1.2.1",

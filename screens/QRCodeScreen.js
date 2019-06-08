@@ -1,43 +1,32 @@
 import React, { Component } from "react";
 import {
   View,
-  WebView,
   Text,
-  Linking,
   Dimensions,
   StyleSheet,
-  TouchableOpacity
 } from "react-native";
 
 import QRCodeScanner from "react-native-qrcode-scanner";
-import ModalWebView from '../components/QRCode/ModalWebView'
 import PropTypes from "prop-types";
 
-export default class QRCodeScreen extends Component {
+class QRCodeScreen extends Component {
   static navigationOptions = {
     header: null
   };
 
   state = {
-    modalVisible: false,
     success: null,
     url: '',
   };
 
-  openLink = () => {
-    Linking.openURL(this.state.url).catch(err =>
-      alert("An error occured", err)
-    );
-    this.setState({ success: false })
-  };
-
   handleButton = () => {
-    this.setState({ modalVisible: !this.state.modalVisible, success: false })
+    this.setState({ success: false })
     this.scanner.reactivate()
   }
 
-  onSuccess = async e => {
-    await this.setState({ success: true, modalVisible: true, url: e.data });
+  onSuccess = e => {
+    this.setState({ success: true, url: e.data });
+    this.props.navigation.navigate('StockScreen');
   };
 
   render() {
@@ -53,13 +42,11 @@ export default class QRCodeScreen extends Component {
           bottomContent={
             <View style={styles.touchable}>
               {this.state.success && (
-                <Text style={styles.text}>OK. Got it!</Text>
+                <Text style={styles.text}>OK! Got It!</Text>
               )}
             </View>
           }
         />
-        <ModalWebView handleButton={this.handleButton} modalVisible={this.state.modalVisible} url={this.state.url} 
-          openLink={this.openLink} />
       </View>
     );
   }
@@ -72,7 +59,6 @@ QRCodeScreen.propTypes = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
     backgroundColor: "black"
   },
   touchable: {
@@ -81,8 +67,5 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 21,
     color: "rgb(0,122,255)"
-  },
-  cameraContainer: {
-    height: Dimensions.get('window').height,
   }
 });

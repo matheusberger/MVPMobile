@@ -1,8 +1,27 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, ScrollView, Image, TouchableOpacity} from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import {StyleSheet, Text, View, TextInput, Dimensions} from 'react-native';
 
-class StockHeader extends Component {
+
+export class InputText extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { text: this.props.placeHolder };
+  }
+
+  render() {
+    return (
+      <TextInput
+        style={{height: 40, borderColor: 'gray',
+                borderWidth: 1,
+                textAlign: 'center',}}
+        onChangeText={(text) => this.setState({text})}
+        value={this.state.text}
+      />
+    );
+  }
+}
+
+export class StockHeader extends Component {
   render() {
     return (
     <View style={styles.headerContainer}>
@@ -12,30 +31,29 @@ class StockHeader extends Component {
   }
 };
 
-class QRViewer extends Component {
+export class QRViewer extends Component {
   render() {
     return (
     <View style={styles.verticalViewerContainer}>
-      <Image style={styles.image} source={require('../assets/qrcodesample.png')} />
       <Text style={styles.title}>{this.props.code}</Text>
     </View>
     );
   }
 };
 
-class ProductInfo extends Component {
+export class ProductInfo extends Component {
   render() {
     return (
     <View style={styles.verticalViewerContainer}>
       <Text style={styles.text}>{this.props.name}</Text>
       <Text style={styles.text}>{this.props.owner}</Text>
-      <Text style={styles.title}>R$ {this.props.price}</Text>
+      <Text style={styles.title}>{this.props.price}</Text>
     </View>
     );
   }
 };
 
-class SizePicker extends Component {
+export class SizePicker extends Component {
   render() {
     return (
     <View style={styles.verticalViewerContainer}>
@@ -48,7 +66,7 @@ class SizePicker extends Component {
   }
 };
 
-class QtyPicker extends Component {
+export class QtyPicker extends Component {
   render() {
     return (
     <View style={styles.verticalViewerContainer}>
@@ -63,26 +81,23 @@ class QtyPicker extends Component {
   }
 };
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#531382',
+    flexDirection: "column",
+    backgroundColor: '#BEB1E6',
   },
   headerContainer: {
     flex: 1,
     marginTop: 15,
     marginBottom: 15,
-    backgroundColor: '#531382',
+    backgroundColor: '#E7E3F4',
   },
-  verticalViewerContainer: {
+  title: {
     flex: 1,
-    marginTop: 15,
-    marginBottom: 15,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#531382',
+    fontSize: 20,
+    color: "#444C59",
+    textAlign: 'center',
   },
   horizontalViewerContainer: {
     flex: 1,
@@ -90,17 +105,33 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     justifyContent: 'space-around',
-    backgroundColor: '#531382',
+    backgroundColor: '#BEB1E6',
+  },
+  headerContainer: {
+    flex: 1,
+    marginTop: 15,
+    marginBottom: 15,
+    backgroundColor: '#BEB1E6',
+  },
+  verticalViewerContainer: {
+    flex: 1,
+    marginTop: 15,
+    marginBottom: 15,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#BEB1E6',
+  },
+  horizontalViewerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    marginTop: 15,
+    marginBottom: 15,
+    justifyContent: 'space-around',
+    backgroundColor: '#BEB1E6',
   },
   headerTitle: {
     flex: 1,
     fontSize: 25,
-    color: "#FFFFFF",
-    textAlign: 'center',
-  },
-  title: {
-    flex: 1,
-    fontSize: 20,
     color: "#FFFFFF",
     textAlign: 'center',
   },
@@ -114,5 +145,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     justifyContent: 'center',
     height: 150
+  },
+  cameraContainer: {
+    height: Dimensions.get('window').height,
+  },
+  touchable: {
+    padding: 16
   }
 });
