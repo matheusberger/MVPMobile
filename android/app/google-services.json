@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1033366666298",
+    "firebase_url": "https://firereact-4a755.firebaseio.com",
+    "project_id": "firereact-4a755",
+    "storage_bucket": "firereact-4a755.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033366666298:android:ba646a16cae18738",
+        "android_client_info": {
+          "package_name": "com.cojunto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033366666298-1137cl8j5a7muhofnc3ru1qcfs8p45mn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8hL4FidISi_CMct3NFtEbqE9RzdD5HZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033366666298-1137cl8j5a7muhofnc3ru1qcfs8p45mn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

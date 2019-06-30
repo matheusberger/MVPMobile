@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MVPMobile</string>
+	<string>cojunto</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -57,8 +57,4 @@
 		</dict>
 	</dict>
 </dict>
-<key>NSCameraUsageDescription</key> 
-<string>camera</string> 
-<key>NSPhotoLibraryUsageDescription</key> 
-<string>library</string>
 </plist>
