@@ -1,11 +1,11 @@
 import React from 'react';
-import { ScrollView, View, Button, Image, StyleSheet, TextInput } from 'react-native';
+import { ScrollView, View, Button, Image, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: '#BEB1E6'
+    backgroundColor: '#D2E5B3'
   },
   horizontalViewerContainer: {
     flex: 1,
@@ -13,10 +13,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     justifyContent: 'space-around',
-    backgroundColor: '#BEB1E6'
+    backgroundColor: '#D2E5B3'
   },
   image: {
-    height: 130,
+    height: 170,
+    alignSelf: 'center',
     resizeMode: 'contain',
     justifyContent: 'center'
   },
@@ -24,7 +25,21 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    textAlign: 'center'
+    textAlign: 'center',
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+    marginBottom:10
+  },
+  button: {
+    height : 35,
+    backgroundColor: '#BFB3E2',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold'
   }
 });
 
@@ -33,30 +48,29 @@ onSuccess = (e) => {
   this.props.navigation.navigate('QRCode')
 };
 
-state = { user: "User", pass: "Password" };
-
-const Login = ({ navigation }) => (
+const Login = ({ navigation }, state = { email: "", pass: ""}) => (
   <View style={ styles.container }>
     <View style={ styles.horizontalViewerContainer }>
       <Image
         style={ styles.image }
-        source={ require('../assets/logo_roxo.png') }
+        source={ require('../assets/logo_verde.png') }
       />
     </View>
     <TextInput
         style={ styles.textInput }
-        onChangeText={(text) => this.setState({user})}
-        value={this.state.user}
+        placeholder="Digite seu E-mail"
+        onChangeText={ (text) => state.email=text }
+        value={state.email}
     />
     <TextInput
         style={ styles.textInput }
-        onChangeText={(text) => this.setState({pass})}
-        value={this.state.pass}
+        placeholder="Digite sua senha"
+        onChangeText={ (text) => state.pass=text }
+        value={state.pass}
     />
-    <Button
-      title="Login"
-      onPress={() => navigation.navigate('QRCode') }
-    />
+    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('QRCode', state) }>
+      <Text style={styles.buttonText}>Logar</Text>
+    </TouchableOpacity>
   </View>
 );
 
