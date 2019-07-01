@@ -49,7 +49,7 @@ class Login extends Component {
             value={this.state.pass}
             onChangeText={ val => this.setState({ pass: val}) }
         />
-        <TouchableOpacity style={styles.button} onPress={ () => this.props.navigation.navigate('QRCode') }>
+        <TouchableOpacity style={styles.button} onPress={ this.entrar }>
           <Text style={styles.buttonText}>Logar</Text>
         </TouchableOpacity>
       </View>
@@ -73,7 +73,7 @@ class QRCodeScreen extends Component {
   onSuccess = (e) => {
     let data = JSON.parse(e.data).product;
     
-    
+
     
     this.onReload();
   };
