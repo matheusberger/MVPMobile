@@ -6,6 +6,9 @@ const Routes = createAppContainer(
   createStackNavigator({
     Login: Login,
     QRCode: QRCode
+  },
+  {
+    initialRouteName: 'Login'
   })
 );
 

@@ -55,7 +55,7 @@ const Login = ({ navigation }) => (
     />
     <Button
       title="Login"
-      onPress={ this.onLogin }
+      onPress={() => navigation.navigate('QRCode') }
     />
   </View>
 );
