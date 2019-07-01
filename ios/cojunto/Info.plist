@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>MVPMobile</string>
+	<string>cojunto</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -58,7 +58,7 @@
 	</dict>
 </dict>
 <key>NSCameraUsageDescription</key> 
-<string>camera</string> 
+<string>Your message to user when the camera is accessed for the first time</string> 
 <key>NSPhotoLibraryUsageDescription</key> 
-<string>library</string>
+<string>Your message to user when the photo library is accessed for the first time</string>
 </plist>

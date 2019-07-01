@@ -1,73 +1,56 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, Text, Button, TouchableOpacity, Image, Dimensions } from 'react-native'
+import { StyleSheet, ScrollView, View, Text, Button, TouchableOpacity, Image, Dimensions, TextInput } from 'react-native'
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import QRCodeScanner from "react-native-qrcode-scanner";
-import { InputText, StockHeader, QRViewer, ProductInfo, SizePicker, QtyPicker } from './Components.js';
+import firebase from 'react-native-firebase';
 
-class HomeScreen extends Component {
+class Login extends Component {
   static navigationOptions = {
-    title: 'Welcome',
-  }
-  render() {
-    return (
-      <ScrollView style={styles.container}>
-        <View style={styles.horizontalViewerContainer}>
-        <Image
-            style={{
-              height: 130,
-              resizeMode: 'contain',
-              justifyContent: 'center'
-            }}
-            source={require('./assets/logo_roxo.png')} />
-        </View>
-        <InputText placeHolder="User"/>
-        <InputText placeHolder="Password"/>
-        <Button
-          title="Login"
-          onPress={() => this.props.navigation.navigate('QRCode')}
-        />
-        <Button
-          title="Stock"
-          onPress={() => this.props.navigation.navigate('Stock')}
-        />
-      </ScrollView>
-    );
-  }
-};
+    header: null
+  };
 
-class StockScreen extends Component {
-  handleButton = () => {
-    this.props.navigation.getParam('onReload')();
-    this.props.navigation.navigate('QRCode');
-  }
-  
+  state = {
+    email: '',
+    pass: ''
+  };
+
+  entrar = async () => {
+    const { email, pass } = this.state;
+    
+    try {
+      const user  = await firebase.auth().signInWithEmailAndPassword(email, pass);
+      this.props.navigation.navigate('QRCode');
+    } catch (err) {
+      alert("E-mail ou senha inválidos");
+    }
+  };
+
   render() {
-    data = this.props.navigation.getParam('data', 'err');
     return (
-      <ScrollView style={styles.container}>
-        <StockHeader spaceName={data['space']} />
-        <View style={styles.horizontalViewerContainer}>
-          <QRViewer code={data['productCode']} />
-          <ProductInfo name={data['productName']} owner={data['productOwner']} price={data['productPrice']} />      
-        </View>
-        <View style={styles.horizontalViewerContainer}>
-          <SizePicker />
-          <QtyPicker />
-        </View>
-        <TouchableOpacity
-          onPress={() => this.handleButton() }
-          style={styles.horizontalViewerContainer}
-          activeOpacity={0.5}>
+      <View style={ styles.container }>
+        <View style={ styles.horizontalViewerContainer }>
           <Image
-            style={{
-              height: 50,
-              resizeMode: 'contain',
-              justifyContent: 'center'
-            }}
-            source={require('./assets/uparrow.png')}
+            style={ styles.image }
+            source={ require('./assets/logo_verde.png') }
           />
+        </View>
+        <TextInput
+            style={ styles.textInput }
+            placeholder="Digite seu E-mail"
+            value={this.state.email}
+            onChangeText={ val =>  this.setState({ email: val }) }
+        />
+        <TextInput
+            style={ styles.textInput }
+            placeholder="Digite sua senha"
+            secureTextEntry
+            value={this.state.pass}
+            onChangeText={ val => this.setState({ pass: val}) }
+        />
+        <TouchableOpacity style={styles.button} onPress={ this.entrar }>
+          <Text style={styles.buttonText}>Logar</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     );
   }
 };
@@ -79,15 +62,44 @@ class QRCodeScreen extends Component {
 
   onReload = () => {
     this.scanner.reactivate();
-  }
+  };
+
+  state = {
+    info: ''
+  };
 
   onSuccess = (e) => {
-    this.props.navigation.navigate('Stock', {data: JSON.parse(e.data), onReload: this.onReload});
+    let data = JSON.parse(e.data).product;
+    if(this.state.info != data.key){
+      this.setState({ info: data.key });
+      this.onReload();
+    }
+    else{
+      this.onReload();
+      return;
+    }
+
+    let usr = firebase.auth().currentUser.uid;
+    let storeName = '';
+    try{
+      let store = firebase.database().ref('users').child(usr).child('store').once('value', snapshot => {
+        storeName = snapshot.val();
+      });
+    }
+    catch(e){
+      console.log(e);
+    }
+    let product = firebase.database().ref('stores').child(storeName).child('products').child(data.key);
+    let stockBySize = product.child('stock').child(data.size)
+    stockBySize.once('value', snapshot => {
+      stockBySize.set(snapshot.val() - 1);
+    });
+    this.onReload();
   };
 
   render() {
     const {curWidth, curHeight} = Dimensions.get('window');
-    
+
     return (
       <View style={styles.container}>
         <QRCodeScanner
@@ -99,16 +111,15 @@ class QRCodeScreen extends Component {
         />
       </View>
     );
-  }
+  };
 }
 
 const AppNavigator = createStackNavigator({
-  Home: HomeScreen,
-  Stock: StockScreen,
+  Login: Login,
   QRCode: QRCodeScreen
 },
 {
-  initialRouteName: 'Home'
+  initialRouteName: 'Login'
 });
 
 const AppContainer = createAppContainer(AppNavigator);
@@ -125,19 +136,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: '#BEB1E6',
-  },
-  headerContainer: {
-    flex: 1,
-    marginTop: 15,
-    marginBottom: 15,
-    backgroundColor: '#E7E3F4',
-  },
-  title: {
-    flex: 1,
-    fontSize: 20,
-    color: "#444C59",
-    textAlign: 'center',
+    backgroundColor: '#D2E5B3'
   },
   horizontalViewerContainer: {
     flex: 1,
@@ -145,48 +144,32 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     justifyContent: 'space-around',
-    backgroundColor: '#BEB1E6',
-  },
-  headerContainer: {
-    flex: 1,
-    marginTop: 15,
-    marginBottom: 15,
-    backgroundColor: '#BEB1E6',
-  },
-  verticalViewerContainer: {
-    flex: 1,
-    marginTop: 15,
-    marginBottom: 15,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#BEB1E6',
-  },
-  horizontalViewerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    marginTop: 15,
-    marginBottom: 15,
-    justifyContent: 'space-around',
-    backgroundColor: '#BEB1E6',
-  },
-  headerTitle: {
-    flex: 1,
-    fontSize: 25,
-    color: "#FFFFFF",
-    textAlign: 'center',
-  },
-  text: {
-    flex: 1,
-    fontSize: 15,
-    color: "#FFFFFF",
-    textAlign: 'center',
+    backgroundColor: '#D2E5B3'
   },
   image: {
+    height: 170,
+    alignSelf: 'center',
     resizeMode: 'contain',
-    justifyContent: 'center',
-    height: 150
+    justifyContent: 'center'
   },
-  touchable: {
-    padding: 16
+  textInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    textAlign: 'center',
+    alignSelf: 'stretch',
+    paddingHorizontal: 20,
+    marginBottom:10
+  },
+  button: {
+    height : 35,
+    backgroundColor: '#BFB3E2',
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: '#FFF',
+    fontWeight: 'bold'
   }
 });
