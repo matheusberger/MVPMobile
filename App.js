@@ -11,19 +11,17 @@ class Login extends Component {
 
   state = {
     email: '',
-    pass: '',
-    isAuthenticated: false
+    pass: ''
   };
 
   entrar = async () => {
-    const { email, pass, isAuthenticated } = this.state;
+    const { email, pass } = this.state;
     
     try {
       const user  = await firebase.auth().signInWithEmailAndPassword(email, pass);
-      this.setState({ isAuthenticated: true });
-      this.props.navigation.navigate('QRCode', user);
+      this.props.navigation.navigate('QRCode');
     } catch (err) {
-      Alert.alert("E-mail ou senha inválidos");
+      alert("E-mail ou senha inválidos");
     }
   };
 
@@ -68,19 +66,40 @@ class QRCodeScreen extends Component {
 
   state = {
     info: ''
-  }
+  };
 
   onSuccess = (e) => {
     let data = JSON.parse(e.data).product;
-    
+    if(this.state.info != data.key){
+      this.setState({ info: data.key });
+      this.onReload();
+    }
+    else{
+      this.onReload();
+      return;
+    }
 
-    
+    let usr = firebase.auth().currentUser.uid;
+    let storeName = '';
+    try{
+      let store = firebase.database().ref('users').child(usr).child('store').once('value', snapshot => {
+        storeName = snapshot.val();
+      });
+    }
+    catch(e){
+      console.log(e);
+    }
+    let product = firebase.database().ref('stores').child(storeName).child('products').child(data.key);
+    let stockBySize = product.child('stock').child(data.size)
+    stockBySize.once('value', snapshot => {
+      stockBySize.set(snapshot.val() - 1);
+    });
     this.onReload();
   };
 
   render() {
     const {curWidth, curHeight} = Dimensions.get('window');
-    
+
     return (
       <View style={styles.container}>
         <QRCodeScanner
@@ -90,7 +109,6 @@ class QRCodeScreen extends Component {
           ref={(elem) => { this.scanner = elem }}
           cameraStyle={height=curHeight}
         />
-        <Text style={styles.buttonText}>{this.state.info}</Text>
       </View>
     );
   };
